@@ -10,6 +10,8 @@ screens/<language>/             the simulator captures, <scene>-<language>.png
 output/appStore-6.3/<language>/ 1206 × 2622, the size App Store Connect requires
 output/appStore-6.9/<language>/ 1320 × 2868, optional
 output/googlePlay/<language>/   1080 × 1920 (Play refuses a side more than twice the other)
+output/googlePlay/               icon-512.png, feature-graphic-<language>.png (1024 × 500)
+brand/icon.png                  the app icon, copied from the app's `assets/icon.png`
 ```
 
 `yarn install` once, with Node 22.
@@ -46,3 +48,13 @@ Each capture goes in a phone, over its scene's photo blurred, under a short titl
 shows the scene's time (12-hour in English) and a full battery instead of the simulator's 09:41
 and charging icon. The PNGs are opaque: both stores refuse an alpha channel. Titles, times and
 store order are in `scripts/composeStoreScreens.js`.
+
+## Google Play's icon and feature graphic
+
+```sh
+yarn compose-play
+```
+
+The 512 × 512 icon from `brand/icon.png`, and the 1024 × 500 feature graphic: the coast photo,
+the icon, the name and a tagline per language (`scripts/composePlayAssets.js`). Copy the app's
+`assets/icon.png` into `brand/` again whenever the icon changes.

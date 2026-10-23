@@ -4,7 +4,8 @@
   "description": "Sunory's store screenshots: the scene photos, the showcase captures and the composed images.",
   "scripts": {
     "push-photos": "scripts/pushShowcasePhotos.sh",
-    "compose": "node scripts/composeStoreScreens.js"
+    "compose": "node scripts/composeStoreScreens.js",
+    "compose-play": "node scripts/composePlayAssets.js"
   },
   "devDependencies": {
     "@expo-google-fonts/inter": "0.4.2",
