@@ -56,13 +56,16 @@ const SCENES = [
     id: "village",
     background: "village.png",
     clock: "19:20",
-    titles: { fr: "La golden hour,\nà la minute près", en: "Golden hour,\nto the minute" },
+    titles: {
+      fr: "La course du soleil,\nsur tout ce que tu vois",
+      en: "The sun's path,\nover any view",
+    },
   },
   {
     id: "sun",
     background: "village.png",
     clock: "19:20",
-    titles: { fr: "Toute la journée\ndu soleil", en: "The sun's whole day\nat a glance" },
+    titles: { fr: "La golden hour,\nà la minute près", en: "Golden hour,\nto the minute" },
   },
   {
     id: "compass",
