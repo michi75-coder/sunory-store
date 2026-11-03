@@ -60,7 +60,7 @@ const SCENES = [
     id: "coast",
     background: "coast.png",
     clock: "21:00",
-    titles: { fr: "Où le soleil\nse couchera ?", en: "Where will\nthe sun set?" },
+    titles: { fr: "Où se couchera\nle soleil ?", en: "Where will\nthe sun set?" },
   },
   {
     id: "apartment",
