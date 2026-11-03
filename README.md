@@ -6,7 +6,8 @@ captures and the composed images. The showcase mode itself lives in the app
 
 ```
 photos/                         the four scene photos (1632 × 2912)
-screens/<language>/             the simulator captures, <scene>-<language>.png
+screens/<language>/             the iPhone simulator captures, <scene>-<language>.png
+screens/android/<language>/     the Android emulator captures (Pixel 8, 1080 × 2400), same names
 output/appStore-6.3/<language>/ 1206 × 2622, the size App Store Connect requires
 output/appStore-6.9/<language>/ 1320 × 2868, optional
 output/googlePlay/<language>/   1080 × 1920 (Play refuses a side more than twice the other)
@@ -48,6 +49,9 @@ Each capture goes in a phone, over its scene's photo blurred, under a short titl
 shows the scene's time (12-hour in English) and a full battery instead of the simulator's 09:41
 and charging icon. The PNGs are opaque: both stores refuse an alpha channel. Titles, times and
 store order are in `scripts/composeStoreScreens.js`.
+
+`yarn compose googlePlay` renders one canvas, `yarn compose googlePlay compass` one of its scenes. Google Play's images use the Android captures in
+an Android frame: the composition redraws the clock and the Wi-Fi icon, as it does on iPhone.
 
 ## Google Play's icon and feature graphic
 
