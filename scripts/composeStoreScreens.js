@@ -54,8 +54,16 @@ const DEVICES = {
   },
 };
 
-// Ordered as on the store: the first three are what a browser sees without scrolling.
+// Ordered as on the store: the first three are what a browser sees without scrolling. Google Play
+// takes eight phone screenshots at most, so eight here for both stores. The map's scenes have no
+// photograph: their own capture, blurred, is their backdrop.
 const SCENES = [
+  {
+    id: "mapArc",
+    background: null,
+    clock: "20:00",
+    titles: { fr: "La course du soleil\nau-dessus de la ville", en: "The sun's path\nabove the city" },
+  },
   {
     id: "coast",
     background: "coast.png",
@@ -63,10 +71,25 @@ const SCENES = [
     titles: { fr: "Où se couchera\nle soleil ?", en: "Where will\nthe sun set?" },
   },
   {
+    id: "mapShadows",
+    background: null,
+    clock: "09:45",
+    titles: {
+      fr: "L'ombre de chaque\nimmeuble, heure par heure",
+      en: "Every building's shadow,\nhour by hour",
+    },
+  },
+  {
     id: "apartment",
     background: "apartment.png",
     clock: "12:20",
     titles: { fr: "Le soleil entre-t-il\nchez toi ?", en: "Will the sun\nreach your home?" },
+  },
+  {
+    id: "mapSpot",
+    background: null,
+    clock: "15:30",
+    titles: { fr: "Ta terrasse est-elle\nau soleil ?", en: "Is your terrace\nin the sun?" },
   },
   {
     id: "mountain",
@@ -78,12 +101,12 @@ const SCENES = [
     },
   },
   {
-    id: "village",
-    background: "village.png",
-    clock: "19:20",
+    id: "mapShade",
+    background: null,
+    clock: "18:40",
     titles: {
-      fr: "La course du soleil,\nsur tout ce que tu vois",
-      en: "The sun's path,\nover any view",
+      fr: "Jusqu'à quelle heure\ny aura-t-il du soleil ?",
+      en: "Until what time\nwill the sun be there?",
     },
   },
   {
@@ -91,12 +114,6 @@ const SCENES = [
     background: "village.png",
     clock: "19:20",
     titles: { fr: "La lumière parfaite,\nà la minute", en: "Perfect light,\nto the minute" },
-  },
-  {
-    id: "compass",
-    background: "village.png",
-    clock: "19:20",
-    titles: { fr: "Choisis un lieu,\nvois son soleil", en: "Pick a place,\nsee its sun" },
   },
 ];
 
@@ -147,7 +164,9 @@ const composeSvg = (scene, language, canvas) => {
   const device = DEVICES[canvas.device];
   const CAPTURE = device.capture;
   const capturePath = path.join(ROOT, device.capturesFolder(language), `${scene.id}-${language}.png`);
-  const backgroundPath = path.join(ROOT, "photos", scene.background);
+  const backgroundPath = scene.background
+    ? path.join(ROOT, "photos", scene.background)
+    : capturePath;
   const phoneTop = Math.round(canvas.height * 0.2);
   const phoneHeight = canvas.height - phoneTop - Math.round(canvas.height * 0.03);
   const scale = phoneHeight / CAPTURE.height;
@@ -194,7 +213,7 @@ const opaquePng = (image) =>
     { colorType: 2, inputColorType: 6, inputHasAlpha: true },
   );
 
-// `yarn compose googlePlay compass` renders one canvas and one scene; without argument, everything.
+// `yarn compose googlePlay mapArc` renders one canvas and one scene; without argument, everything.
 const requestedCanvas = process.argv[2];
 const requestedScene = process.argv[3];
 
@@ -206,6 +225,14 @@ const renderAll = () => {
       }
       const outputDirectory = path.join(ROOT, "output", canvasName, language);
       fs.mkdirSync(outputDirectory, { recursive: true });
+      // A full render replaces the folder's screenshots: a scene taken off the list goes with it.
+      if (!requestedScene) {
+        for (const fileName of fs.readdirSync(outputDirectory)) {
+          if (/^\d{2}-.+\.png$/.test(fileName)) {
+            fs.rmSync(path.join(outputDirectory, fileName));
+          }
+        }
+      }
       SCENES.forEach((scene, sceneIndex) => {
         if (requestedScene && requestedScene !== scene.id) {
           return;

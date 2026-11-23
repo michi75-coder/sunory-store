@@ -38,19 +38,21 @@ then in English. "Leave showcase mode" reloads the app.
 
 ## Compose the store images
 
-Put the captures in `screens/<language>/<scene>-<language>.png` (`coast`, `apartment`,
-`mountain`, `village`, `sun`, `compass`), then:
+Put the captures in `screens/<language>/<scene>-<language>.png` (`mapArc`, `coast`,
+`mapShadows`, `apartment`, `mapSpot`, `mountain`, `mapShade`, `sun`: eight, Google Play's
+maximum), then:
 
 ```sh
 yarn compose
 ```
 
-Each capture goes in a phone, over its scene's photo blurred, under a short title; the status bar
+Each capture goes in a phone, over its scene's photo blurred (the map's scenes, which have no
+photo, over their own capture blurred), under a short title; the status bar
 shows the scene's time (12-hour in English) and a full battery instead of the simulator's 09:41
 and charging icon. The PNGs are opaque: both stores refuse an alpha channel. Titles, times and
 store order are in `scripts/composeStoreScreens.js`.
 
-`yarn compose googlePlay` renders one canvas, `yarn compose googlePlay compass` one of its scenes. Google Play's images use the Android captures in
+`yarn compose googlePlay` renders one canvas, `yarn compose googlePlay mapArc` one of its scenes. Google Play's images use the Android captures in
 an Android frame: the composition redraws the clock and the Wi-Fi icon, as it does on iPhone.
 
 ## Google Play's icon and feature graphic
