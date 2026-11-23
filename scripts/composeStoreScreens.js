@@ -40,6 +40,22 @@ const DEVICES = {
   <rect x="1194" y="91" width="6" height="14" rx="3" fill="#FFFFFF" fill-opacity="0.45"/>`,
     cutout: '<rect x="472" y="42" width="376" height="110" rx="55" fill="#000000"/>',
   },
+  // A real iPhone's screenshot (iPhone 12 to 14, 1170 × 2532), for a view easier to stage on the
+  // phone than in the simulator: picked when the capture has that size. Framed like the simulator's.
+  iphone1170: {
+    capture: { width: 1170, height: 2532 },
+    capturesFolder: (language) => path.join("screens", language),
+    screenRadius: 168,
+    smudgeOffset: 86,
+    timeSpot: { x: 88, y: 44, width: 210, height: 70 },
+    iconsSpot: { x: 995, y: 50, width: 105, height: 56 },
+    clockText: { x: 104, y: 99, fontSize: 48 },
+    statusIcons: `
+  <rect x="1006" y="62" width="74" height="35" rx="11" fill="none" stroke="#FFFFFF" stroke-opacity="0.45" stroke-width="3"/>
+  <rect x="1012" y="68" width="62" height="23" rx="6" fill="#FFFFFF"/>
+  <rect x="1084" y="74" width="5" height="12" rx="2.5" fill="#FFFFFF" fill-opacity="0.45"/>`,
+    cutout: '<rect x="418" y="37" width="334" height="98" rx="49" fill="#000000"/>',
+  },
   android: {
     capture: { width: 1080, height: 2400 },
     capturesFolder: (language) => path.join("screens", "android", language),
@@ -61,7 +77,7 @@ const SCENES = [
   {
     id: "mapArc",
     background: null,
-    clock: "20:00",
+    clock: "15:23",
     titles: { fr: "La course du soleil\nau-dessus de la ville", en: "The sun's path\nabove the city" },
   },
   {
@@ -145,8 +161,30 @@ const statusBar = (clock, device) => `
   <text x="${device.clockText.x}" y="${device.clockText.y}" font-family="Inter" font-weight="600" font-size="${device.clockText.fontSize}" fill="#FFFFFF">${clock}</text>
   ${device.statusIcons}`;
 
+// A PNG's size, read from its header, without decoding it.
+const pngSize = (filePath) => {
+  const header = Buffer.alloc(24);
+  const fileDescriptor = fs.openSync(filePath, "r");
+  fs.readSync(fileDescriptor, header, 0, 24, 0);
+  fs.closeSync(fileDescriptor);
+  return { width: header.readUInt32BE(16), height: header.readUInt32BE(20) };
+};
+
+// The canvas's device, or the device of the same family whose screen has the capture's size.
+const deviceFor = (canvas, capturePath) => {
+  const { width, height } = pngSize(capturePath);
+  const sameSize = Object.values(DEVICES).find(
+    (device) => device.capture.width === width && device.capture.height === height,
+  );
+  return sameSize ?? DEVICES[canvas.device];
+};
+
 const composeSvg = (scene, language, canvas) => {
-  const device = DEVICES[canvas.device];
+  const canvasDevice = DEVICES[canvas.device];
+  const device = deviceFor(
+    canvas,
+    path.join(ROOT, canvasDevice.capturesFolder(language), `${scene.id}-${language}.png`),
+  );
   const CAPTURE = device.capture;
   const capturePath = path.join(ROOT, device.capturesFolder(language), `${scene.id}-${language}.png`);
   const backgroundPath = scene.background
