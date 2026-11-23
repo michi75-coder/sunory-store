@@ -70,21 +70,20 @@ const DEVICES = {
   },
 };
 
-// Ordered as on the store: the first three are what a browser sees without scrolling. The map,
-// now the app's main screen, comes first; it has no photograph: its own capture, blurred, is its
-// backdrop.
+// Ordered as on the store: the first three are what a browser sees without scrolling. The 3D view
+// opens, the map follows; the map has no photograph: its own capture, blurred, is its backdrop.
 const SCENES = [
-  {
-    id: "mapArc",
-    background: null,
-    clock: "15:23",
-    titles: { fr: "La course du soleil\nau-dessus de la ville", en: "The sun's path\nabove the city" },
-  },
   {
     id: "coast",
     background: "coast.png",
     clock: "21:00",
     titles: { fr: "Où se couchera\nle soleil ?", en: "Where will\nthe sun set?" },
+  },
+  {
+    id: "mapArc",
+    background: null,
+    clock: "15:23",
+    titles: { fr: "La course du soleil\nau-dessus de la ville", en: "The sun's path\nabove the city" },
   },
   {
     id: "apartment",
