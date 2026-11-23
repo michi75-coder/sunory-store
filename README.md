@@ -80,6 +80,7 @@ Slide the time slider slowly, tilt the map: keep it under 30 seconds. Then:
 ```sh
 yarn compose-preview screens/video/map-fr.mov fr          # the whole recording
 yarn compose-preview screens/video/map-fr.mov fr 2 24     # from 2 s, 24 s long
+yarn compose-preview screens/video/map-fr.mov fr 0 12 0.8  # 12 s slowed to 15 s
 ```
 
 `output/appPreview/<language>/preview.mp4`: 886 × 1920, 30 fps, H.264, with a silent stereo track

@@ -1,6 +1,8 @@
 // Turns a simulator recording into an App Store app preview: 886 × 1920 (the 6.9-inch iPhone's
 // size, also taken for the smaller ones), at most 30 fps, H.264 with a silent stereo AAC track,
-// 15 to 30 seconds long. `yarn compose-preview <recording> <language> [start] [duration]`.
+// 15 to 30 seconds long.
+// `yarn compose-preview <recording> <language> [start] [duration] [speed]`: `speed` below 1 slows
+// the recording down, to stretch a slide that was a little quick to Apple's 15 seconds.
 const { execFileSync } = require("node:child_process");
 const fs = require("node:fs");
 const path = require("node:path");
@@ -9,9 +11,12 @@ const ROOT = path.join(__dirname, "..");
 const PREVIEW = { width: 886, height: 1920, frameRate: 30 };
 const DURATION_LIMITS_SECONDS = { min: 15, max: 30 };
 
-const [recordingArgument, language, startArgument, durationArgument] = process.argv.slice(2);
+const [recordingArgument, language, startArgument, durationArgument, speedArgument] =
+  process.argv.slice(2);
 if (!recordingArgument || !language) {
-  console.error("Usage: yarn compose-preview <recording> <language> [start seconds] [duration seconds]");
+  console.error(
+    "Usage: yarn compose-preview <recording> <language> [start seconds] [duration seconds] [speed]",
+  );
   process.exit(1);
 }
 const recordingPath = path.resolve(recordingArgument);
@@ -29,10 +34,10 @@ const recordingSeconds = Number(
   ]).toString(),
 );
 const startSeconds = Number(startArgument ?? 0);
-const durationSeconds = Math.min(
-  DURATION_LIMITS_SECONDS.max,
-  Number(durationArgument ?? recordingSeconds - startSeconds),
-);
+const speed = Number(speedArgument ?? 1);
+// The cut, in the recording's own seconds, and how long it plays once slowed down or sped up.
+const cutSeconds = Number(durationArgument ?? recordingSeconds - startSeconds);
+const durationSeconds = Math.min(DURATION_LIMITS_SECONDS.max, cutSeconds / speed);
 if (durationSeconds < DURATION_LIMITS_SECONDS.min) {
   console.error(
     `${durationSeconds.toFixed(1)} s: Apple wants ${DURATION_LIMITS_SECONDS.min} to ${DURATION_LIMITS_SECONDS.max} seconds.`,
@@ -46,6 +51,7 @@ const outputPath = path.join(outputDirectory, "preview.mp4");
 
 // The simulator's 1320 × 2868 is a hair taller than 886 × 1920: scaled to cover, then cropped.
 const videoFilter = [
+  `setpts=PTS/${speed}`,
   `scale=${PREVIEW.width}:${PREVIEW.height}:force_original_aspect_ratio=increase`,
   `crop=${PREVIEW.width}:${PREVIEW.height}`,
   `fps=${PREVIEW.frameRate}`,
@@ -57,7 +63,7 @@ execFileSync(
   [
     "-y",
     "-ss", String(startSeconds),
-    "-t", String(durationSeconds),
+    "-t", String(cutSeconds),
     "-i", recordingPath,
     "-f", "lavfi",
     "-i", "anullsrc=channel_layout=stereo:sample_rate=44100",
@@ -70,7 +76,7 @@ execFileSync(
     "-crf", "18",
     "-c:a", "aac",
     "-b:a", "256k",
-    "-shortest",
+    "-t", String(durationSeconds),
     "-movflags", "+faststart",
     outputPath,
   ],
