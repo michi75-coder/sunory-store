@@ -1,2 +1,5 @@
 node_modules/
 .DS_Store
+
+# Raw simulator recordings: large, only the composed preview is kept.
+screens/video/

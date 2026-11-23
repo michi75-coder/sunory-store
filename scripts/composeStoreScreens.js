@@ -54,9 +54,9 @@ const DEVICES = {
   },
 };
 
-// Ordered as on the store: the first three are what a browser sees without scrolling. Google Play
-// takes eight phone screenshots at most, so eight here for both stores. The map's scenes have no
-// photograph: their own capture, blurred, is their backdrop.
+// Ordered as on the store: the first three are what a browser sees without scrolling. The map,
+// now the app's main screen, comes first; it has no photograph: its own capture, blurred, is its
+// backdrop.
 const SCENES = [
   {
     id: "mapArc",
@@ -71,25 +71,10 @@ const SCENES = [
     titles: { fr: "Où se couchera\nle soleil ?", en: "Where will\nthe sun set?" },
   },
   {
-    id: "mapShadows",
-    background: null,
-    clock: "09:45",
-    titles: {
-      fr: "L'ombre de chaque\nimmeuble, heure par heure",
-      en: "Every building's shadow,\nhour by hour",
-    },
-  },
-  {
     id: "apartment",
     background: "apartment.png",
     clock: "12:20",
     titles: { fr: "Le soleil entre-t-il\nchez toi ?", en: "Will the sun\nreach your home?" },
-  },
-  {
-    id: "mapSpot",
-    background: null,
-    clock: "15:30",
-    titles: { fr: "Ta terrasse est-elle\nau soleil ?", en: "Is your terrace\nin the sun?" },
   },
   {
     id: "mountain",
@@ -101,12 +86,12 @@ const SCENES = [
     },
   },
   {
-    id: "mapShade",
-    background: null,
-    clock: "18:40",
+    id: "village",
+    background: "village.png",
+    clock: "19:20",
     titles: {
-      fr: "Jusqu'à quelle heure\ny aura-t-il du soleil ?",
-      en: "Until what time\nwill the sun be there?",
+      fr: "La course du soleil,\nsur tout ce que tu vois",
+      en: "The sun's path,\nover any view",
     },
   },
   {

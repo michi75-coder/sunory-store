@@ -39,8 +39,7 @@ then in English. "Leave showcase mode" reloads the app.
 ## Compose the store images
 
 Put the captures in `screens/<language>/<scene>-<language>.png` (`mapArc`, `coast`,
-`mapShadows`, `apartment`, `mapSpot`, `mountain`, `mapShade`, `sun`: eight, Google Play's
-maximum), then:
+`apartment`, `mountain`, `village`, `sun`), then:
 
 ```sh
 yarn compose
@@ -64,3 +63,24 @@ yarn compose-play
 The 512 × 512 icon from `brand/icon.png`, and the 1024 × 500 feature graphic: the coast photo,
 the icon, the name and a tagline per language (`scripts/composePlayAssets.js`). Copy the app's
 `assets/icon.png` into `brand/` again whenever the icon changes.
+
+## App preview (video)
+
+A short video of the map, for the App Store's app preview (and, uploaded to YouTube, Google
+Play's promo video). In the simulator, stage the map scene, then freeze the status bar and record:
+
+```sh
+xcrun simctl status_bar booted override --time 20:00 --batteryState charged --batteryLevel 100 --wifiBars 3 --cellularBars 4
+xcrun simctl io booted recordVideo screens/video/map-fr.mov   # Ctrl+C to stop
+xcrun simctl status_bar booted clear
+```
+
+Slide the time slider slowly, tilt the map: keep it under 30 seconds. Then:
+
+```sh
+yarn compose-preview screens/video/map-fr.mov fr          # the whole recording
+yarn compose-preview screens/video/map-fr.mov fr 2 24     # from 2 s, 24 s long
+```
+
+`output/appPreview/<language>/preview.mp4`: 886 × 1920, 30 fps, H.264, with a silent stereo track
+(App Store Connect wants audio), between 15 and 30 seconds as Apple requires. Needs `ffmpeg`.

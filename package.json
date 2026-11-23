@@ -5,7 +5,8 @@
   "scripts": {
     "push-photos": "scripts/pushShowcasePhotos.sh",
     "compose": "node scripts/composeStoreScreens.js",
-    "compose-play": "node scripts/composePlayAssets.js"
+    "compose-play": "node scripts/composePlayAssets.js",
+    "compose-preview": "node scripts/composeAppPreview.js"
   },
   "devDependencies": {
     "@expo-google-fonts/inter": "0.4.2",
